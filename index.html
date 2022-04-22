@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <script type="module">
+    import init_basis from './js/basis_transcoder.js';
+
+    import init from "./pkg/webxr-pbr.js";
+    window.addEventListener("load", async () => {
+      window.basis_transcoder = await init_basis();
+      init();
+    });
+  </script>
+</body>
+
+</html>
