@@ -1,21 +1,110 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
+    <body>
+        <script type="module">
+            let pc = new RTCPeerConnection({
+                iceServers: [
+                    {
+                        urls: "stun:stun.l.google.com:19302",
+                    },
+                ],
+            });
 
-<body>
-  <script type="module">
-    import init_basis from './js/basis_transcoder.js';
+            let udpLike = { ordered: false, maxRetransmits: 0 };
 
-    import init from "./pkg/webxr-pbr.js";
-    window.addEventListener("load", async () => {
-      window.basis_transcoder = await init_basis();
-      init();
-    });
-  </script>
-</body>
+            let channels_list = [];
 
+            pc.oniceconnectionstatechange = (e) => console.log(pc.iceConnectionState);
+            pc.onicecandidate = (event) => {
+                if (event.candidate === null) {
+                    document.getElementById("localSessionDescription").value = btoa(JSON.stringify(pc.localDescription));
+                }
+            };
+
+            pc.ondatachannel = (e) => {
+              console.log(e);
+              setupChannel(e.channel);
+            };
+
+            pc.onnegotiationneeded = (e) =>
+                pc
+                    .createOffer()
+                    .then((d) => pc.setLocalDescription(d))
+                    .catch(console.log);
+
+            let receiveMessage = (id, message) => {
+              console.log(id)
+            };
+
+            let setupChannel = (channel) => {
+              let id = channels_list.length;
+
+              channel.onclose = () => console.log("sendChannel has closed");
+              channel.onopen = () => console.log("sendChannel has opened");
+              channel.onerror = (error) => console.log(error);
+              channel.onmessage = (message) => {
+                receiveMessage(id, message);
+              };
+
+              channels_list.push(channel);
+            }
+
+            // Imported by wasm.
+            window.setReceiveMessage = (func) => {
+              receiveMessage = func;
+            }
+
+            // Imported by wasm. Should ideally broadcast to all connected peers.
+            window.sendMessage = (uint8buf) => {
+                // https://stackoverflow.com/a/54646864
+                // a `Uint8Array.buffer` returns the whole buffer, which seems to be the whole wasm heap?
+                // So we need to slice it to the view we want. Not sure if we specifically need to do this or can just send
+                // the uint8array directly. Haven't tested it.
+                let ab = uint8buf.buffer.slice(uint8buf.byteOffset, uint8buf.byteLength + uint8buf.byteOffset);
+
+                for (let i = 0; i < channels_list.length; i++) {
+                  channels_list[i].send(ab);
+                }
+            };
+
+            let is_hosting = false;
+
+            window.host = () => {
+              let sendChannel = pc.createDataChannel("foo", udpLike);
+              setupChannel(sendChannel);
+              is_hosting = true;
+            };
+
+            window.startSession = async () => {
+                let sd = document.getElementById("remoteSessionDescription").value;
+                if (sd === "") {
+                    return alert("Session Description must not be empty");
+                }
+
+                console.log("starting");
+
+                await pc.setRemoteDescription(new RTCSessionDescription(JSON.parse(atob(sd))));;
+                if (!is_hosting) {
+                  let answer = await pc.createAnswer();
+                  console.log(answer);
+                  await pc.setLocalDescription(answer);
+                }
+            };
+
+            import init from "./pkg/webxr-pbr.js";
+            window.addEventListener("load", async () => {
+                init();
+            });
+        </script>
+        Local Session Description (base64, readonly): <textarea id="localSessionDescription" readonly="true"></textarea> <br />
+        Remote Session Description (base64): <textarea id="remoteSessionDescription"></textarea> <br />
+        <button onclick="window.host()">Host</button> <br />
+        <button onclick="window.startSession()">Start</button> <br />
+        <br />
+    </body>
 </html>
