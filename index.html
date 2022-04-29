@@ -12,14 +12,9 @@
 
             const room_name = "main";
 
-            const key_generation_config = {
+            const ecdsa_config = {
                 name: "ECDSA",
                 namedCurve: "P-384"
-            };
-
-            const key_import_config = {
-                name: 'ECDSA',
-                hash: {name: "SHA-384"},
             };
 
             let key_pair;
@@ -41,8 +36,8 @@
                 }));
             } else {
                 key_pair = {
-                    publicKey: await crypto.subtle.importKey("jwk", existing_key_pair.publicKey, key_import_config, true, ['verify']),
-                    privateKey: await crypto.subtle.importKey("jwk", existing_key_pair.privateKey, key_import_config, true, ['sign']),
+                    publicKey: await crypto.subtle.importKey("jwk", existing_key_pair.publicKey, ecdsa_config, true, ['verify']),
+                    privateKey: await crypto.subtle.importKey("jwk", existing_key_pair.privateKey, ecdsa_config, true, ['sign']),
                 };
 
                 console.log("Loaded existing keypair");

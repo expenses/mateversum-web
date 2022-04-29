@@ -1617,6 +1617,11 @@ var trystero = (function (exports) {
     hash: {name: "SHA-384"},
   };
 
+  const ecdsa_import_params = {
+    name: 'ECDSA',
+    namedCurve: 'P-384'
+  };
+
   const pack = buff =>
     window.btoa(String.fromCharCode.apply(null, new Uint8Array(buff)));
 
@@ -1653,7 +1658,7 @@ var trystero = (function (exports) {
 
   const verify = async (string) => {
     const data = JSON.parse(string);
-    const imported_key = await crypto.subtle.importKey('jwk', data.key, ecdsa_params, true, ['verify']);
+    const imported_key = await crypto.subtle.importKey('jwk', data.key, ecdsa_import_params, true, ['verify']);
 
     const encoder = new TextEncoder();
     const encoded_sdp = encoder.encode(data.sdp);
