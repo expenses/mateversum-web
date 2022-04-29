@@ -102,6 +102,14 @@
                 console.log(contacts);
                 localStorage.setItem("contacts", JSON.stringify(contacts));
             };
+
+            window.ls = () => {
+                console.log("Connected:");
+                console.log(`* [<you>][${self_key_id}][${selfId}]`)
+                for (const peer_id in peers) {
+                    console.log(`- ${contact_name(peer_id)}`);
+                }
+            }
         </script>
     </body>
 </html>
