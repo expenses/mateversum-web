@@ -53,6 +53,7 @@
             const room = joinRoom({ appId: "webxr_pbr_wasm", signing_key: key_pair }, room_name);
 
             const self_key_id = await make_key_id(key_pair.publicKey);
+            console.log(`My transient peer ID: ${selfId}`);
             console.log(`My key id: '${self_key_id}'`);
 
             let exported = await crypto.subtle.exportKey("jwk", key_pair.publicKey);
