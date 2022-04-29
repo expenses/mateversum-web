@@ -54,7 +54,7 @@
 
             const self_key_id = await make_key_id(key_pair.publicKey);
             console.log(`My transient peer ID: ${selfId}`);
-            console.log(`My key id: '${self_key_id}'`);
+            console.log(`My key id: ${self_key_id}`);
 
             let exported = await crypto.subtle.exportKey("jwk", key_pair.publicKey);
 
@@ -63,7 +63,7 @@
             function contact_name(peer_id) {
                 const key_id = peers[peer_id].key_id;
 
-                return `'${key_id}'/'${key_id in contacts ? contacts[key_id] : 'unknown'}'`;
+                return `[${key_id in contacts ? contacts[key_id] : 'unknown'}][${key_id}][${peer_id}]`;
             }
 
             async function make_key_id(key) {
@@ -85,6 +85,12 @@
 
                 console.log(`${contact_name(peer_id)} joined`);
             });
+
+            room.onPeerLeave(async (peer_id) => {
+                console.log(`${contact_name(peer_id)} left`);
+
+                delete peers[peer_id];
+            })
 
             const [send_chat_msg, get_chat_msg] = room.makeAction('chat');
 
