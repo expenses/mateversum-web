@@ -39,6 +39,10 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly main: () => void;
   readonly run: () => number;
+  readonly __wbg_threadpool_free: (a: number) => void;
+  readonly loaderhelper_mainJS: (a: number) => number;
+  readonly worker_entry_point: (a: number) => void;
+  readonly __wbg_loaderhelper_free: (a: number) => void;
   readonly ZSTD_compress2: (a: number, b: number, c: number, d: number, e: number) => number;
   readonly ZSTD_decompressDCtx: (a: number, b: number, c: number, d: number, e: number) => number;
   readonly ZSTD_isError: (a: number) => number;
@@ -208,10 +212,6 @@ export interface InitOutput {
   readonly ZSTD_createDDict_byReference: (a: number, b: number) => number;
   readonly ZSTD_initStaticDDict: (a: number, b: number, c: number, d: number, e: number, f: number) => number;
   readonly ZSTD_estimateDDictSize: (a: number, b: number) => number;
-  readonly __wbg_threadpool_free: (a: number) => void;
-  readonly loaderhelper_mainJS: (a: number) => number;
-  readonly worker_entry_point: (a: number) => void;
-  readonly __wbg_loaderhelper_free: (a: number) => void;
   readonly wgpu_render_pass_set_bind_group: (a: number, b: number, c: number, d: number, e: number) => void;
   readonly wgpu_render_pass_set_pipeline: (a: number, b: number) => void;
   readonly wgpu_render_pass_set_blend_constant: (a: number, b: number) => void;

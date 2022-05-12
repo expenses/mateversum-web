@@ -2,6 +2,10 @@
 /* eslint-disable */
 export function main(): void;
 export function run(): number;
+export function __wbg_threadpool_free(a: number): void;
+export function loaderhelper_mainJS(a: number): number;
+export function worker_entry_point(a: number): void;
+export function __wbg_loaderhelper_free(a: number): void;
 export function ZSTD_compress2(a: number, b: number, c: number, d: number, e: number): number;
 export function ZSTD_decompressDCtx(a: number, b: number, c: number, d: number, e: number): number;
 export function ZSTD_isError(a: number): number;
@@ -171,10 +175,6 @@ export function ZSTD_decompressBlock(a: number, b: number, c: number, d: number,
 export function ZSTD_createDDict_byReference(a: number, b: number): number;
 export function ZSTD_initStaticDDict(a: number, b: number, c: number, d: number, e: number, f: number): number;
 export function ZSTD_estimateDDictSize(a: number, b: number): number;
-export function __wbg_threadpool_free(a: number): void;
-export function loaderhelper_mainJS(a: number): number;
-export function worker_entry_point(a: number): void;
-export function __wbg_loaderhelper_free(a: number): void;
 export function wgpu_render_pass_set_bind_group(a: number, b: number, c: number, d: number, e: number): void;
 export function wgpu_render_pass_set_pipeline(a: number, b: number): void;
 export function wgpu_render_pass_set_blend_constant(a: number, b: number): void;
