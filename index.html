@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </head>
     <body>
+      <script src="coi-serviceworker.js"></script>
       <script src = "trystero_bundled.js"></script>
       <script type="module">
         window.onerror = function (msg, url, linenumber) {
@@ -154,8 +155,9 @@
             handle_xr_data = func;
         };
 
-        import init from "./pkg/webxr-pbr.js";
-        init();
+        import init, { run } from "./pkg/webxr_pbr.js";
+        await init();
+        await run();
       </script>
     </body>
 </html>
